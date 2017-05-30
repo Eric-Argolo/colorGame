@@ -1,3 +1,23 @@
+// ================== VARIABLES ======================
+
+var colorDisplay = document.getElementById('colorDisplay');
+var h1 = document.querySelector("h1");
+var message = document.querySelector("#message");
+var squares = document.querySelectorAll(".square");
+var easyBtn = document.querySelector("#easyBtn");
+var mediumBtn = document.querySelector("#mediumBtn");
+var hardBtn = document.querySelector("#hardBtn");
+var difficultyLevel = 6;
+var reset = document.querySelector("#reset");
+
+var game = {}
+game.init = function(){
+	setupButtons();
+	setupSquares();
+	resetGame(5); // difficulty level starts on medium
+}
+game.init();
+
 // ================== FUNCTIONS ======================
 
 function randomColor(){
@@ -29,55 +49,65 @@ function resetGame(num){
 	message.textContent = "";
 }
 
-// ================== DECLARATIONS ======================
-
-var colorDisplay = document.getElementById('colorDisplay');
-var h1 = document.querySelector("h1");
-var message = document.querySelector("#message");
-var squares = document.querySelectorAll(".square");
-
-var easyBtn = document.querySelector("#easyBtn");
-var hardBtn = document.querySelector("#hardBtn");
-var difficultyLevel = 6;
-var reset = document.querySelector("#reset");
+function setVisibleSquares(num){
+	for(i=0; i<squares.length; i++){
+		squares[i].style.display = "inline";
+	}	
+	for(i=difficultyLevel; i<squares.length; i++){
+		squares[i].style.display = "none";
+	}
+}
 
 // ================== EVENT LISTENERS ======================
 
-hardBtn.addEventListener("click", function(){
-	squares[4].style.display = "inline";
-	squares[5].style.display = "inline";
-	hardBtn.className = "selected";
-	easyBtn.className = "";
-	difficultyLevel = 6;
-	resetGame(difficultyLevel);
-});
-
-easyBtn.addEventListener("click", function(){
-	squares[4].style.display = "none";
-	squares[5].style.display = "none";
-	easyBtn.className = "selected";
-	hardBtn.className = "";
-	difficultyLevel = 4;
-	resetGame(difficultyLevel);
-});
-
-reset.addEventListener("click", function(){
-	resetGame(difficultyLevel);
-});
-
-for(i=0; i<squares.length; i++){
-	squares[i].addEventListener("click", function(){
-		clickedColor = this.style.backgroundColor;
-		if(clickedColor === pickedColor){
-			h1.style.backgroundColor = pickedColor;
-			for(i=0; i<squares.length; i++){
-				squares[i].style.backgroundColor = pickedColor;
-				message.textContent = "Correct!";
-				reset.textContent = "Play Again?";
-			}
-		}else{
-			this.style.backgroundColor = "#232323";			
-			message.textContent = "Try Again!";
-		}
+function setupButtons(){
+	easyBtn.addEventListener("click", function(){
+		difficultyLevel = 3;
+		setVisibleSquares(difficultyLevel);
+		easyBtn.classList.add("selected");
+		mediumBtn.classList.remove("selected");
+		hardBtn.classList.remove("selected");		
+		resetGame(difficultyLevel);
 	});
+
+	mediumBtn.addEventListener("click", function(){
+		difficultyLevel = 5;
+		setVisibleSquares(difficultyLevel);
+		easyBtn.classList.remove("selected");
+		mediumBtn.classList.add("selected");
+		hardBtn.classList.remove("selected");		
+		resetGame(difficultyLevel);
+	});
+
+	hardBtn.addEventListener("click", function(){
+		difficultyLevel = 7;
+		setVisibleSquares(difficultyLevel);
+		easyBtn.classList.remove("selected");
+		mediumBtn.classList.remove("selected");
+		hardBtn.classList.add("selected");		
+		resetGame(difficultyLevel);
+	});
+
+	reset.addEventListener("click", function(){
+		resetGame(difficultyLevel);
+	});
+}
+
+function setupSquares(){
+	for(i=0; i<squares.length; i++){
+		squares[i].addEventListener("click", function(){
+			clickedColor = this.style.backgroundColor;
+			if(clickedColor === pickedColor){
+				h1.style.backgroundColor = pickedColor;
+				for(i=0; i<squares.length; i++){
+					squares[i].style.backgroundColor = pickedColor;
+					message.textContent = "Correct!";
+					reset.textContent = "Play Again?";
+				}
+			}else{
+				this.style.backgroundColor = "#232323";			
+				message.textContent = "Try Again!";
+			}
+		});
+	}
 }
